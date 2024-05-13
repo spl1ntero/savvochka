@@ -82,5 +82,36 @@ def add_seller():
     return redirect(url_for('index'))
 
 
+@app.route('/add_supplier', methods=['POST'])
+def add_supplier():
+    name = request.form.get('name')
+    type = request.form.get('type')
+    address = request.form.get('address')
+
+    new_supplier = {"name": name, "type": type, "address": address}
+    suppliers.append(new_supplier)
+
+    save_data(supplers, 'suppliers.json')
+
+    return redirect(url_for('index'))
+
+
+@app.route('/add_flower', methods=['POST'])
+def add_flower():
+    name = request.form.get('name')
+    type = request.form.get('type')
+    country = request.form.get('country')
+    season = request.form.get('season')
+    sort = request.form.get('sort')
+    price = request.form.get('price')
+
+    new_flower = {"name": name, "type": type, "country": country, "season": season, "sort": sort, "price": price}
+    flowers.append(new_flower)
+
+    save_data(flowers, 'flowers.json')
+
+    return redirect(url_for('index'))
+
+
 if __name__ == '__main__':
     app.run(debug=True)

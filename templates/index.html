@@ -85,6 +85,35 @@
                 ...
 
             </table>
+            <h2>Добавить цветы</h2>
+            <form id="addFlowersForm" method="post" action="/add_flower">
+                <div class="form-group mt-3">
+                    <label for="FlowerNameInput">Название:</label>
+                    <input type="text" class="form-control" id="FlowerNameInput" name="name">
+                </div>
+                <div class="form-group">
+                    <label for="FlowerTypeInput">Вид:</label>
+                    <input type="text" class="form-control" id="FlowerTypeInput" name="type">
+                </div>
+                <div class="form-group">
+                    <label for="FlowerCountryInput">Страна:</label>
+                    <input type="text" class="form-control" id="FlowerCountryInput" name="country">
+                </div>
+                <div class="form-group">
+                    <label for="FlowerSeasonInput">Сезон цветения:</label>
+                    <input type="text" class="form-control" id="FlowerSeasonInput" name="season">
+                </div>
+                <div class="form-group">
+                    <label for="FlowerSortInput">Сорт:</label>
+                    <input type="text" class="form-control" id="FlowerSortInput" name="sort">
+                </div>
+                <div class="form-group">
+                    <label for="FlowerPriceInput">Цена:</label>
+                    <input type="text" class="form-control" id="FlowerPriceInput" name="price">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Добавить цветок</button>
+            </form>
         </div>
         <div class="col-md-12">
             <h2>Поставщики</h2>
@@ -116,6 +145,23 @@
                 {% endif %}
                 </tbody>
             </table>
+            <h2>Добавить поставщика</h2>
+            <form id="addSupplierForm" method="post" action="/add_supplier">
+                <div class="form-group mt-3">
+                    <label for="supplierNameInput">ФИО:</label>
+                    <input type="text" class="form-control" id="supplierNameInput" name="name">
+                </div>
+                <div class="form-group">
+                    <label for="supplierTypeInput">Вид хозяйства:</label>
+                    <input type="text" class="form-control" id="supplierTypeInput" name="type">
+                </div>
+                <div class="form-group">
+                    <label for="supplierAddressInput">Адрес:</label>
+                    <input type="text" class="form-control" id="supplierAddressInput" name="address">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Добавить поставщика</button>
+            </form>
         </div>
 
         <div class="col-md-12">
