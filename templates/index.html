@@ -50,7 +50,6 @@
 
 <header id="header">
     <h1>Магазин цветов</h1>
-    <h1>{{ current_season }}</h1>
 </header>
 
 <div class="container mt-5">
@@ -71,7 +70,7 @@
                 ...
                 <tbody id="flowersList">
                 {% for flower in flowers %}
-                    {% if selected_season == None or selected_season == flower.season %}
+                    {% if current_season == None or current_season == flower.season %}
                         <tr>
                             <td>{{ flower.name }}</td>
                             <td>{{ flower.type }}</td>
@@ -98,6 +97,23 @@
                 </tr>
                 </thead>
                 <tbody id="suppliersList">
+                {% if filtered_suppliers %}
+                    {% for supplier in filtered_suppliers %}
+                        <tr>
+                            <td>{{ supplier.name }}</td>
+                            <td>{{ supplier.name }}</td>
+                            <td>{{ supplier.address }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    {% for supplier in suppliers %}
+                        <tr>
+                            <td>{{ supplier.name }}</td>
+                            <td>{{ supplier.name }}</td>
+                            <td>{{ supplier.address }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
                 </tbody>
             </table>
         </div>
@@ -112,6 +128,12 @@
                 </tr>
                 </thead>
                 <tbody id="sellersList">
+                {% for seller in sellers %}
+                    <tr>
+                        <td>{{ seller.name }}</td>
+                        <td>{{ seller.address }}</td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
             <h2>Добавить продавца</h2>
@@ -136,23 +158,31 @@
                     <label for="seasonSelect">Выберите сезон цветения:</label>
                     <select class="form-control" id="seasonSelect" name="season" onchange="this.form.submit()">
                         <option value="" {% if current_season == None %} selected {% endif %}>All</option>
-                        <option value="Весна" {% if current_season == "Весна" %} selected {% endif %}>Весна</option>
-                        <option value="Лето" {% if current_season == "Лето" %} selected {% endif %}>Лето</option>
-                        <option value="Осень" {% if current_season == "Осень" %} selected {% endif %}>Осень</option>
-                        <option value="Зима" {% if current_season == "Зима" %} selected {% endif %}>Зима</option>
+                        <option value="Весна" {% if current_season == 'Весна' %} selected {% endif %}>Весна</option>
+                        <option value="Лето" {% if current_season == 'Лето' %} selected {% endif %}>Лето</option>
+                        <option value="Осень" {% if current_season == 'Осень' %} selected {% endif %}>Осень</option>
+                        <option value="Зима" {% if current_season == 'Зима' %} selected {% endif %}>Зима</option>
                     </select>
                 </form>
             </div>
 
 
             <div class="form-group">
-                <label for="countryInput">Введите страну:</label>
-                <input type="text" class="form-control" id="countryInput">
+                <form id="filterForm" method="GET" action="/filter_by_country">
+                    <label for="countryInput">Введите страну:</label>
+                    <input type="text" class="form-control" id="countryInput" name="country">
+                    <button type="submit" class="btn btn-primary">Фильтр по стране</button>
+                </form>
             </div>
-            <div class="mb-4">
-                {#          <button type="button" class="btn btn-primary" >Фильтр по сезону</button>#}
-                <button type="button" class="btn btn-primary" onclick="getFlowersByCountry()">Фильтр по стране</button>
+
+            <div class="form-group">
+                <form id="filterForm" method="GET" action="/filter_by_supplier">
+                    <label for="countryInput">Введите имя поставщика:</label>
+                    <input type="text" class="form-control" id="countryInput" name="name">
+                    <button type="submit" class="btn btn-primary">Фильтр поставщиков</button>
+                </form>
             </div>
+
         </div>
     </div>
 </div>
@@ -164,6 +194,5 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="static/script.js"></script>
 </body>
 </html>

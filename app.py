@@ -23,13 +23,12 @@ sellers = load_data('sellers.json')
 @app.route('/', methods=['GET'])
 def index():
     current_season = request.args.get('season')
-    if current_season:  # Если выбран сезон, отобразить только цветы этого сезона
+    if current_season:
         filtered_flowers = [flower for flower in flowers if flower['season'] == current_season]
-        return render_template('index.html', flowers=filtered_flowers, current_season=current_season)
-    else:  # Иначе отобразить все цветы
-        return render_template('index.html', flowers=flowers, current_season=None)
-
-
+        return render_template('index.html', flowers=filtered_flowers, current_season=current_season,
+                               suppliers=suppliers, sellers=sellers)
+    else:
+        return render_template('index.html', flowers=flowers, current_season=None, suppliers=suppliers, sellers=sellers)
 
 
 @app.route('/get_flowers', methods=['GET'])
@@ -54,12 +53,20 @@ def filter_by_season():
     return render_template('index.html', flowers=filtered_flowers, suppliers=suppliers, sellers=sellers)
 
 
-
-
-@app.route('/filter_by_country/<string:country>', methods=['GET'])
-def filter_by_country(country):
+@app.route('/filter_by_country', methods=['GET'])
+def filter_by_country():
+    country = request.args.get('country')
     filtered_flowers = [flower for flower in flowers if flower['country'] == country]
-    return jsonify(filtered_flowers)
+    return render_template('index.html', flowers=filtered_flowers, current_season=None, suppliers=suppliers,
+                           sellers=sellers)
+
+
+@app.route('/filter_by_supplier', methods=['GET'])
+def filter_by_supplier():
+    name = request.args.get('name')
+    filtered_suppliers = [supplier for supplier in suppliers if supplier['name'] == name]
+    return render_template('index.html', flowers=flowers, current_season=None, suppliers=suppliers,
+                           filtered_suppliers=filtered_suppliers, sellers=sellers)
 
 
 @app.route('/add_seller', methods=['POST'])
@@ -72,7 +79,6 @@ def add_seller():
 
     save_data(sellers, 'sellers.json')
 
-    # Перенаправляем пользователя на главную страницу
     return redirect(url_for('index'))
 
 
