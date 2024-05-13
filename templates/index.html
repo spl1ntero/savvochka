@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин цветов</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #header {
+            background-color: #343a40;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        #footer {
+            background-color: #343a40;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            width: 100%;
+        }
+
+        .custom-table {
+            width: 100%;
+        }
+
+        .custom-table th {
+            background-color: #f2f2f2;
+        }
+
+        .custom-table th,
+        .custom-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .custom-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .custom-table tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+<header id="header">
+    <h1>Магазин цветов</h1>
+    <h1>{{ current_season }}</h1>
+</header>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Цветы</h2>
+            <table class="table custom-table" id="flowersTable">
+                <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Вид</th>
+                    <th>Страна</th>
+                    <th>Сезон цветения</th>
+                    <th>Сорт</th>
+                    <th>Цена</th>
+                </tr>
+                </thead>
+                ...
+                <tbody id="flowersList">
+                {% for flower in flowers %}
+                    {% if selected_season == None or selected_season == flower.season %}
+                        <tr>
+                            <td>{{ flower.name }}</td>
+                            <td>{{ flower.type }}</td>
+                            <td>{{ flower.country }}</td>
+                            <td>{{ flower.season }}</td>
+                            <td>{{ flower.sort }}</td>
+                            <td>{{ flower.price }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+                ...
+
+            </table>
+        </div>
+        <div class="col-md-12">
+            <h2>Поставщики</h2>
+            <table class="table custom-table" id="suppliersTable">
+                <thead>
+                <tr>
+                    <th>ФИО</th>
+                    <th>Вид хозяйства</th>
+                    <th>Адрес</th>
+                </tr>
+                </thead>
+                <tbody id="suppliersList">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-12">
+            <h2>Продавцы</h2>
+            <table class="table custom-table" id="sellersTable">
+                <thead>
+                <tr>
+                    <th>ФИО</th>
+                    <th>Адрес</th>
+                </tr>
+                </thead>
+                <tbody id="sellersList">
+                </tbody>
+            </table>
+            <h2>Добавить продавца</h2>
+            <form id="addSellerForm" method="post" action="/add_seller">
+                <div class="form-group mt-3">
+                    <label for="sellerNameInput">ФИО:</label>
+                    <input type="text" class="form-control" id="sellerNameInput" name="name">
+                </div>
+                <div class="form-group">
+                    <label for="sellerAddressInput">Адрес:</label>
+                    <input type="text" class="form-control" id="sellerAddressInput" name="address">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Добавить продавца</button>
+            </form>
+        </div>
+
+        <div class="col-md-12">
+            <h2>Фильтры</h2>
+            <div class="form-group">
+                <form id="filterForm" method="GET" action="/">
+                    <label for="seasonSelect">Выберите сезон цветения:</label>
+                    <select class="form-control" id="seasonSelect" name="season" onchange="this.form.submit()">
+                        <option value="" {% if current_season == None %} selected {% endif %}>All</option>
+                        <option value="Весна" {% if current_season == "Весна" %} selected {% endif %}>Весна</option>
+                        <option value="Лето" {% if current_season == "Лето" %} selected {% endif %}>Лето</option>
+                        <option value="Осень" {% if current_season == "Осень" %} selected {% endif %}>Осень</option>
+                        <option value="Зима" {% if current_season == "Зима" %} selected {% endif %}>Зима</option>
+                    </select>
+                </form>
+            </div>
+
+
+            <div class="form-group">
+                <label for="countryInput">Введите страну:</label>
+                <input type="text" class="form-control" id="countryInput">
+            </div>
+            <div class="mb-4">
+                {#          <button type="button" class="btn btn-primary" >Фильтр по сезону</button>#}
+                <button type="button" class="btn btn-primary" onclick="getFlowersByCountry()">Фильтр по стране</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer id="footer">
+    <p>© 2024 Магазин цветов. Все права защищены.</p>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="static/script.js"></script>
+</body>
+</html>
