@@ -1,8 +1,8 @@
-from flask import Flask, jsonify, render_template, request, redirect, url_for
+from flask import Flask, jsonify, render_template, request, redirect, url_for, session, flash
 import json
-import os
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Замените на ваш секретный ключ
 
 
 def load_data(filename):
@@ -29,6 +29,20 @@ def index():
                                suppliers=suppliers, sellers=sellers)
     else:
         return render_template('index.html', flowers=flowers, current_season=None, suppliers=suppliers, sellers=sellers)
+
+
+@app.route('/add_info', methods=['GET'])
+def add_info():
+    if 'username' in session and session['username'] == 'admin':
+        return render_template('add_info.html')
+    else:
+        flash('Пожалуйста, войдите для доступа к админ-панели.')
+        return redirect(url_for('login'))
+
+
+@app.route('/mainn', methods=['GET'])
+def mainn():
+    return render_template('main.html')
 
 
 @app.route('/get_flowers', methods=['GET'])
@@ -71,46 +85,77 @@ def filter_by_supplier():
 
 @app.route('/add_seller', methods=['POST'])
 def add_seller():
-    name = request.form.get('name')
-    address = request.form.get('address')
+    if 'username' in session and session['username'] == 'admin':
+        name = request.form.get('name')
+        address = request.form.get('address')
 
-    new_seller = {"name": name, "address": address}
-    sellers.append(new_seller)
+        new_seller = {"name": name, "address": address}
+        sellers.append(new_seller)
 
-    save_data(sellers, 'sellers.json')
+        save_data(sellers, 'sellers.json')
 
-    return redirect(url_for('index'))
+        return redirect(url_for('add_info'))
+    else:
+        flash('Недостаточно прав.')
+        return redirect(url_for('login'))
 
 
 @app.route('/add_supplier', methods=['POST'])
 def add_supplier():
-    name = request.form.get('name')
-    type = request.form.get('type')
-    address = request.form.get('address')
+    if 'username' in session and session['username'] == 'admin':
+        name = request.form.get('name')
+        type = request.form.get('type')
+        address = request.form.get('address')
 
-    new_supplier = {"name": name, "type": type, "address": address}
-    suppliers.append(new_supplier)
+        new_supplier = {"name": name, "type": type, "address": address}
+        suppliers.append(new_supplier)
 
-    save_data(supplers, 'suppliers.json')
+        save_data(suppliers, 'suppliers.json')
 
-    return redirect(url_for('index'))
+        return redirect(url_for('add_info'))
+    else:
+        flash('Недостаточно прав.')
+        return redirect(url_for('login'))
 
 
 @app.route('/add_flower', methods=['POST'])
 def add_flower():
-    name = request.form.get('name')
-    type = request.form.get('type')
-    country = request.form.get('country')
-    season = request.form.get('season')
-    sort = request.form.get('sort')
-    price = request.form.get('price')
+    if 'username' in session and session['username'] == 'admin':
+        name = request.form.get('name')
+        type = request.form.get('type')
+        country = request.form.get('country')
+        season = request.form.get('season')
+        sort = request.form.get('sort')
+        price = request.form.get('price')
 
-    new_flower = {"name": name, "type": type, "country": country, "season": season, "sort": sort, "price": price}
-    flowers.append(new_flower)
+        new_flower = {"name": name, "type": type, "country": country, "season": season, "sort": sort, "price": price}
+        flowers.append(new_flower)
 
-    save_data(flowers, 'flowers.json')
+        save_data(flowers, 'flowers.json')
 
-    return redirect(url_for('index'))
+        return redirect(url_for('add_info'))
+    else:
+        flash('Недостаточно прав.')
+        return redirect(url_for('login'))
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if username == 'admin' and password == 'admin':
+            session['username'] = username
+            return redirect(url_for('add_info'))
+        else:
+            flash('Неправильное имя пользователя или пароль.')
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('login'))
 
 
 if __name__ == '__main__':

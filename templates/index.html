@@ -5,55 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Магазин цветов</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        #header {
-            background-color: #343a40;
-            color: #fff;
-            padding: 20px 0;
-            text-align: center;
-        }
-
-        #footer {
-            background-color: #343a40;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
-            position: sticky;
-            width: 100%;
-        }
-
-        .custom-table {
-            width: 100%;
-        }
-
-        .custom-table th {
-            background-color: #f2f2f2;
-        }
-
-        .custom-table th,
-        .custom-table td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        .custom-table tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        .custom-table tr:hover {
-            background-color: #ddd;
-        }
-    </style>
+    <link type="text/css" href="{{ url_for('static', filename='styles.css')}}" rel="stylesheet" />
 </head>
 <body>
 
 <header id="header">
-    <h1>Магазин цветов</h1>
+    <div class="container d-flex justify-content-between align-items-center">
+        <nav class="navbar navbar-expand-sm navbar-light">
+          <div class="container-fluid">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">Таблицы</a>
+              </li>
+             <li class="nav-item">
+                <a class="nav-link" href="/mainn">Главная</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/add_info">Админ панель</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+    </div>
 </header>
 
 <div class="container mt-5">
     <div class="row">
+        <div class="col-md-12">
+            <h2>Фильтры</h2>
+            <div class="form-group">
+                <form id="filterForm" method="GET" action="/">
+                    <label for="seasonSelect">Выберите сезон цветения:</label>
+                    <select class="form-control" id="seasonSelect" name="season" onchange="this.form.submit()">
+                        <option value="" {% if current_season == None %} selected {% endif %}>All</option>
+                        <option value="Весна" {% if current_season == 'Весна' %} selected {% endif %}>Весна</option>
+                        <option value="Лето" {% if current_season == 'Лето' %} selected {% endif %}>Лето</option>
+                        <option value="Осень" {% if current_season == 'Осень' %} selected {% endif %}>Осень</option>
+                        <option value="Зима" {% if current_season == 'Зима' %} selected {% endif %}>Зима</option>
+                    </select>
+                </form>
+            </div>
+
+            <div class="form-group">
+                <form id="filterForm" method="GET" action="/filter_by_country">
+                    <label for="countryInput">Введите страну:</label>
+                    <input type="text" class="form-control" id="countryInput" name="country">
+                    <button type="submit" class="btn btn-primary mt-2">Фильтр по стране</button>
+                </form>
+            </div>
+
+            <div class="form-group">
+                <form id="filterForm" method="GET" action="/filter_by_supplier">
+                    <label for="supplierInput">Введите имя поставщика:</label>
+                    <input type="text" class="form-control" id="supplierInput" name="name">
+                    <button type="submit" class="btn btn-primary mt-2">Фильтр поставщиков</button>
+                </form>
+            </div>
+        </div>
         <div class="col-md-12">
             <h2>Цветы</h2>
             <table class="table custom-table" id="flowersTable">
@@ -67,7 +75,6 @@
                     <th>Цена</th>
                 </tr>
                 </thead>
-                ...
                 <tbody id="flowersList">
                 {% for flower in flowers %}
                     {% if current_season == None or current_season == flower.season %}
@@ -82,86 +89,7 @@
                     {% endif %}
                 {% endfor %}
                 </tbody>
-                ...
-
             </table>
-            <h2>Добавить цветы</h2>
-            <form id="addFlowersForm" method="post" action="/add_flower">
-                <div class="form-group mt-3">
-                    <label for="FlowerNameInput">Название:</label>
-                    <input type="text" class="form-control" id="FlowerNameInput" name="name">
-                </div>
-                <div class="form-group">
-                    <label for="FlowerTypeInput">Вид:</label>
-                    <input type="text" class="form-control" id="FlowerTypeInput" name="type">
-                </div>
-                <div class="form-group">
-                    <label for="FlowerCountryInput">Страна:</label>
-                    <input type="text" class="form-control" id="FlowerCountryInput" name="country">
-                </div>
-                <div class="form-group">
-                    <label for="FlowerSeasonInput">Сезон цветения:</label>
-                    <input type="text" class="form-control" id="FlowerSeasonInput" name="season">
-                </div>
-                <div class="form-group">
-                    <label for="FlowerSortInput">Сорт:</label>
-                    <input type="text" class="form-control" id="FlowerSortInput" name="sort">
-                </div>
-                <div class="form-group">
-                    <label for="FlowerPriceInput">Цена:</label>
-                    <input type="text" class="form-control" id="FlowerPriceInput" name="price">
-                </div>
-
-                <button type="submit" class="btn btn-primary">Добавить цветок</button>
-            </form>
-        </div>
-        <div class="col-md-12">
-            <h2>Поставщики</h2>
-            <table class="table custom-table" id="suppliersTable">
-                <thead>
-                <tr>
-                    <th>ФИО</th>
-                    <th>Вид хозяйства</th>
-                    <th>Адрес</th>
-                </tr>
-                </thead>
-                <tbody id="suppliersList">
-                {% if filtered_suppliers %}
-                    {% for supplier in filtered_suppliers %}
-                        <tr>
-                            <td>{{ supplier.name }}</td>
-                            <td>{{ supplier.name }}</td>
-                            <td>{{ supplier.address }}</td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    {% for supplier in suppliers %}
-                        <tr>
-                            <td>{{ supplier.name }}</td>
-                            <td>{{ supplier.name }}</td>
-                            <td>{{ supplier.address }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
-                </tbody>
-            </table>
-            <h2>Добавить поставщика</h2>
-            <form id="addSupplierForm" method="post" action="/add_supplier">
-                <div class="form-group mt-3">
-                    <label for="supplierNameInput">ФИО:</label>
-                    <input type="text" class="form-control" id="supplierNameInput" name="name">
-                </div>
-                <div class="form-group">
-                    <label for="supplierTypeInput">Вид хозяйства:</label>
-                    <input type="text" class="form-control" id="supplierTypeInput" name="type">
-                </div>
-                <div class="form-group">
-                    <label for="supplierAddressInput">Адрес:</label>
-                    <input type="text" class="form-control" id="supplierAddressInput" name="address">
-                </div>
-
-                <button type="submit" class="btn btn-primary">Добавить поставщика</button>
-            </form>
         </div>
 
         <div class="col-md-12">
@@ -182,59 +110,47 @@
                 {% endfor %}
                 </tbody>
             </table>
-            <h2>Добавить продавца</h2>
-            <form id="addSellerForm" method="post" action="/add_seller">
-                <div class="form-group mt-3">
-                    <label for="sellerNameInput">ФИО:</label>
-                    <input type="text" class="form-control" id="sellerNameInput" name="name">
-                </div>
-                <div class="form-group">
-                    <label for="sellerAddressInput">Адрес:</label>
-                    <input type="text" class="form-control" id="sellerAddressInput" name="address">
-                </div>
-
-                <button type="submit" class="btn btn-primary">Добавить продавца</button>
-            </form>
         </div>
-
         <div class="col-md-12">
-            <h2>Фильтры</h2>
-            <div class="form-group">
-                <form id="filterForm" method="GET" action="/">
-                    <label for="seasonSelect">Выберите сезон цветения:</label>
-                    <select class="form-control" id="seasonSelect" name="season" onchange="this.form.submit()">
-                        <option value="" {% if current_season == None %} selected {% endif %}>All</option>
-                        <option value="Весна" {% if current_season == 'Весна' %} selected {% endif %}>Весна</option>
-                        <option value="Лето" {% if current_season == 'Лето' %} selected {% endif %}>Лето</option>
-                        <option value="Осень" {% if current_season == 'Осень' %} selected {% endif %}>Осень</option>
-                        <option value="Зима" {% if current_season == 'Зима' %} selected {% endif %}>Зима</option>
-                    </select>
-                </form>
-            </div>
-
-
-            <div class="form-group">
-                <form id="filterForm" method="GET" action="/filter_by_country">
-                    <label for="countryInput">Введите страну:</label>
-                    <input type="text" class="form-control" id="countryInput" name="country">
-                    <button type="submit" class="btn btn-primary">Фильтр по стране</button>
-                </form>
-            </div>
-
-            <div class="form-group">
-                <form id="filterForm" method="GET" action="/filter_by_supplier">
-                    <label for="countryInput">Введите имя поставщика:</label>
-                    <input type="text" class="form-control" id="countryInput" name="name">
-                    <button type="submit" class="btn btn-primary">Фильтр поставщиков</button>
-                </form>
-            </div>
-
+            <h2>Поставщики</h2>
+            <table class="table custom-table" id="suppliersTable">
+                <thead>
+                <tr>
+                    <th>ФИО</th>
+                    <th>Вид хозяйства</th>
+                    <th>Адрес</th>
+                </tr>
+                </thead>
+                <tbody id="suppliersList">
+                {% if filtered_suppliers %}
+                    {% for supplier in filtered_suppliers %}
+                        <tr>
+                            <td>{{ supplier.name }}</td>
+                            <td>{{ supplier.type }}</td>
+                            <td>{{ supplier.address }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    {% for supplier in suppliers %}
+                        <tr>
+                            <td>{{ supplier.name }}</td>
+                            <td>{{ supplier.type }}</td>
+                            <td>{{ supplier.address }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
         </div>
+
+
     </div>
 </div>
 
 <footer id="footer">
-    <p>© 2024 Магазин цветов. Все права защищены.</p>
+    <div class="container">
+        <p>© 2024 Магазин цветов. Все права защищены.</p>
+    </div>
 </footer>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
