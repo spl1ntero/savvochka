@@ -6,26 +6,22 @@
     <title>Добавить информацию</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link type="text/css" href="{{ url_for('static', filename='styles.css')}}" rel="stylesheet" />
-
 </head>
 <body>
 
 <header id="header">
     <div class="container d-flex justify-content-between align-items-center">
         <nav class="navbar navbar-expand-sm navbar-light">
-          <div class="container-fluid">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" href="/add_info">Админ панель</a>
-              </li>
-             <li class="nav-item">
-                <a class="nav-link" href="/mainn">Главная</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/">Таблицы</a>
-              </li>
-            </ul>
-          </div>
+            <div class="container-fluid">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/add_info">Админ панель</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Таблицы</a>
+                    </li>
+                </ul>
+            </div>
         </nav>
     </div>
 </header>
@@ -33,65 +29,75 @@
 <div class="container mt-5">
     <div class="row">
         <h2>Добавить цветы</h2>
-            <form id="addFlowersForm" method="post" action="/add_flower">
-                <div class="form-group mt-3">
-                    <label for="FlowerNameInput">Название:</label>
-                    <input type="text" class="form-control" id="FlowerNameInput" name="name">
-                </div>
-                <div class="form-group">
-                    <label for="FlowerTypeInput">Вид:</label>
-                    <input type="text" class="form-control" id="FlowerTypeInput" name="type">
-                </div>
-                <div class="form-group">
-                    <label for="FlowerCountryInput">Страна:</label>
-                    <input type="text" class="form-control" id="FlowerCountryInput" name="country">
-                </div>
-                <div class="form-group">
-                    <label for="FlowerSeasonInput">Сезон цветения:</label>
-                    <input type="text" class="form-control" id="FlowerSeasonInput" name="season">
-                </div>
-                <div class="form-group">
-                    <label for="FlowerSortInput">Сорт:</label>
-                    <input type="text" class="form-control" id="FlowerSortInput" name="sort">
-                </div>
-                <div class="form-group">
-                    <label for="FlowerPriceInput">Цена:</label>
-                    <input type="text" class="form-control" id="FlowerPriceInput" name="price">
-                </div>
+        <form id="addFlowersForm" method="post" action="/add_flower">
+            <div class="form-group mt-3">
+                <label for="FlowerNameInput">Название:</label>
+                <input type="text" class="form-control" id="FlowerNameInput" name="name">
+            </div>
+            <div class="form-group">
+                <label for="FlowerTypeInput">Вид:</label>
+                <input type="text" class="form-control" id="FlowerTypeInput" name="type">
+            </div>
+            <div class="form-group">
+                <label for="FlowerCountryInput">Страна:</label>
+                <input type="text" class="form-control" id="FlowerCountryInput" name="country">
+            </div>
+            <div class="form-group">
+                <label for="FlowerSeasonInput">Сезон цветения:</label>
+                <input type="text" class="form-control" id="FlowerSeasonInput" name="season">
+            </div>
+            <div class="form-group">
+                <label for="FlowerSortInput">Сорт:</label>
+                <input type="text" class="form-control" id="FlowerSortInput" name="sort">
+            </div>
+            <div class="form-group">
+                <label for="FlowerPriceInput">Цена:</label>
+                <input type="text" class="form-control" id="FlowerPriceInput" name="price">
+            </div>
+            <div class="form-group">
+                <label for="FlowerSupplierInput">Поставщик:</label>
+                <input type="text" class="form-control" id="FlowerSupplierInput" name="supplier">
+            </div>
+            <div class="form-group">
+                <label for="FlowerSellerInput">Продавец:</label>
+                <input type="text" class="form-control" id="FlowerSellerInput" name="seller">
+            </div>
 
-                <button type="submit" class="btn btn-primary">Добавить цветок</button>
-            </form>
-            <h2>Добавить поставщика</h2>
-            <form id="addSupplierForm" method="post" action="/add_supplier">
-                <div class="form-group mt-3">
-                    <label for="supplierNameInput">ФИО:</label>
-                    <input type="text" class="form-control" id="supplierNameInput" name="name">
-                </div>
-                <div class="form-group">
-                    <label for="supplierTypeInput">Вид хозяйства:</label>
-                    <input type="text" class="form-control" id="supplierTypeInput" name="type">
-                </div>
-                <div class="form-group">
-                    <label for="supplierAddressInput">Адрес:</label>
-                    <input type="text" class="form-control" id="supplierAddressInput" name="address">
-                </div>
+            <button type="submit" class="btn btn-primary">Добавить цветок</button>
+        </form>
 
-                <button type="submit" class="btn btn-primary">Добавить поставщика</button>
-            </form>
-        </div>
-    <h2>Добавить продавца</h2>
-            <form id="addSellerForm" method="post" action="/add_seller">
-                <div class="form-group mt-3">
-                    <label for="sellerNameInput">ФИО:</label>
-                    <input type="text" class="form-control" id="sellerNameInput" name="name">
-                </div>
-                <div class="form-group">
-                    <label for="sellerAddressInput">Адрес:</label>
-                    <input type="text" class="form-control" id="sellerAddressInput" name="address">
-                </div>
+        <h2>Добавить поставщика</h2>
+        <form id="addSupplierForm" method="post" action="/add_supplier">
+            <div class="form-group mt-3">
+                <label for="supplierNameInput">ФИО:</label>
+                <input type="text" class="form-control" id="supplierNameInput" name="name">
+            </div>
+            <div class="form-group">
+                <label for="supplierTypeInput">Вид хозяйства:</label>
+                <input type="text" class="form-control" id="supplierTypeInput" name="type">
+            </div>
+            <div class="form-group">
+                <label for="supplierAddressInput">Адрес:</label>
+                <input type="text" class="form-control" id="supplierAddressInput" name="address">
+            </div>
 
-                <button type="submit" class="btn btn-primary">Добавить продавца</button>
-            </form>
+            <button type="submit" class="btn btn-primary">Добавить поставщика</button>
+        </form>
+
+        <h2>Добавить продавца</h2>
+        <form id="addSellerForm" method="post" action="/add_seller">
+            <div class="form-group mt-3">
+                <label for="sellerNameInput">ФИО:</label>
+                <input type="text" class="form-control" id="sellerNameInput" name="name">
+            </div>
+            <div class="form-group">
+                <label for="sellerAddressInput">Адрес:</label>
+                <input type="text" class="form-control" id="sellerAddressInput" name="address">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Добавить продавца</button>
+        </form>
+    </div>
 </div>
 
 <footer id="footer">

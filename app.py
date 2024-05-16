@@ -40,11 +40,6 @@ def add_info():
         return redirect(url_for('login'))
 
 
-@app.route('/mainn', methods=['GET'])
-def mainn():
-    return render_template('main.html')
-
-
 @app.route('/get_flowers', methods=['GET'])
 def get_flowers():
     return jsonify(flowers)
@@ -79,8 +74,8 @@ def filter_by_country():
 def filter_by_supplier():
     name = request.args.get('name')
     filtered_suppliers = [supplier for supplier in suppliers if supplier['name'] == name]
-    return render_template('index.html', flowers=flowers, current_season=None, suppliers=suppliers,
-                           filtered_suppliers=filtered_suppliers, sellers=sellers)
+    return render_template('index.html', flowers=flowers, current_season=None, suppliers=suppliers, filtered_suppliers=filtered_suppliers, sellers=sellers)
+
 
 
 @app.route('/add_seller', methods=['POST'])
@@ -127,8 +122,19 @@ def add_flower():
         season = request.form.get('season')
         sort = request.form.get('sort')
         price = request.form.get('price')
+        supplier = request.form.get('supplier')
+        seller = request.form.get('seller')
 
-        new_flower = {"name": name, "type": type, "country": country, "season": season, "sort": sort, "price": price}
+        new_flower = {
+            "name": name,
+            "type": type,
+            "country": country,
+            "season": season,
+            "sort": sort,
+            "price": price,
+            "supplier": supplier,
+            "seller": seller
+        }
         flowers.append(new_flower)
 
         save_data(flowers, 'flowers.json')
@@ -156,6 +162,34 @@ def login():
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
+
+
+@app.route('/flowers_by_supplier', methods=['GET'])
+def flowers_by_supplier():
+    supplier_name = request.args.get('supplier')
+    supplier_flowers = [flower for flower in flowers if flower['supplier'] == supplier_name]
+    return render_template('index.html', flowers=supplier_flowers, current_season=None, suppliers=suppliers, sellers=sellers, filtered_suppliers=None)
+
+@app.route('/suppliers_by_flower_sort', methods=['GET'])
+def suppliers_by_flower_sort():
+    flower_sort = request.args.get('sort')
+    flower_suppliers = [supplier for supplier in suppliers if flower_sort in [flower['sort'] for flower in flowers if flower['supplier'] == supplier['name']]]
+    return render_template('index.html', flowers=flowers, current_season=None, suppliers=suppliers, sellers=sellers, filtered_suppliers=flower_suppliers)
+
+@app.route('/expensive_flower_sellers', methods=['GET'])
+def expensive_flower_sellers():
+    max_price = max([float(flower['price']) for flower in flowers])
+    expensive_sellers = [seller for seller in sellers if any(flower for flower in flowers if float(flower['price']) == max_price and flower['seller'] == seller['name'])]
+    return render_template('index.html', flowers=flowers, current_season=None, suppliers=suppliers, sellers=expensive_sellers, filtered_suppliers=None)
+
+@app.route('/common_suppliers', methods=['GET'])
+def common_suppliers():
+    seller1 = request.args.get('seller1')
+    seller2 = request.args.get('seller2')
+    suppliers_seller1 = {flower['supplier'] for flower in flowers if flower['seller'] == seller1}
+    suppliers_seller2 = {flower['supplier'] for flower in flowers if flower['seller'] == seller2}
+    common_suppliers = list(suppliers_seller1.intersection(suppliers_seller2))
+    return render_template('index.html', flowers=flowers, current_season=None, suppliers=common_suppliers, sellers=sellers, filtered_suppliers=None)
 
 
 if __name__ == '__main__':

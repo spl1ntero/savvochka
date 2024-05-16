@@ -17,9 +17,6 @@
               <li class="nav-item">
                 <a class="nav-link active" href="#">Таблицы</a>
               </li>
-             <li class="nav-item">
-                <a class="nav-link" href="/mainn">Главная</a>
-              </li>
               <li class="nav-item">
                 <a class="nav-link" href="/add_info">Админ панель</a>
               </li>
@@ -37,7 +34,7 @@
                 <form id="filterForm" method="GET" action="/">
                     <label for="seasonSelect">Выберите сезон цветения:</label>
                     <select class="form-control" id="seasonSelect" name="season" onchange="this.form.submit()">
-                        <option value="" {% if current_season == None %} selected {% endif %}>All</option>
+                        <option value="" {% if current_season == None %} selected {% endif %}>Все</option>
                         <option value="Весна" {% if current_season == 'Весна' %} selected {% endif %}>Весна</option>
                         <option value="Лето" {% if current_season == 'Лето' %} selected {% endif %}>Лето</option>
                         <option value="Осень" {% if current_season == 'Осень' %} selected {% endif %}>Осень</option>
@@ -61,7 +58,40 @@
                     <button type="submit" class="btn btn-primary mt-2">Фильтр поставщиков</button>
                 </form>
             </div>
+
+            <div class="form-group">
+                <form id="filterForm" method="GET" action="/flowers_by_supplier">
+                    <label for="supplierFlowersInput">Введите имя поставщика для цветов:</label>
+                    <input type="text" class="form-control" id="supplierFlowersInput" name="supplier">
+                    <button type="submit" class="btn btn-primary mt-2">Цветы от поставщика</button>
+                </form>
+            </div>
+
+            <div class="form-group">
+                <form id="filterForm" method="GET" action="/suppliers_by_flower_sort">
+                    <label for="flowerSortInput">Введите сорт цветка:</label>
+                    <input type="text" class="form-control" id="flowerSortInput" name="sort">
+                    <button type="submit" class="btn btn-primary mt-2">Поставщики по сорту</button>
+                </form>
+            </div>
+
+            <div class="form-group">
+                <form id="filterForm" method="GET" action="/expensive_flower_sellers">
+                    <button type="submit" class="btn btn-primary mt-2">Продавцы самых дорогих цветов</button>
+                </form>
+            </div>
+
+            <div class="form-group">
+                <form id="filterForm" method="GET" action="/common_suppliers">
+                    <label for="commonSupplierSeller1Input">Продавец 1:</label>
+                    <input type="text" class="form-control" id="commonSupplierSeller1Input" name="seller1">
+                    <label for="commonSupplierSeller2Input">Продавец 2:</label>
+                    <input type="text" class="form-control" id="commonSupplierSeller2Input" name="seller2">
+                    <button type="submit" class="btn btn-primary mt-2">Общие поставщики</button>
+                </form>
+            </div>
         </div>
+
         <div class="col-md-12">
             <h2>Цветы</h2>
             <table class="table custom-table" id="flowersTable">
@@ -77,16 +107,14 @@
                 </thead>
                 <tbody id="flowersList">
                 {% for flower in flowers %}
-                    {% if current_season == None or current_season == flower.season %}
-                        <tr>
-                            <td>{{ flower.name }}</td>
-                            <td>{{ flower.type }}</td>
-                            <td>{{ flower.country }}</td>
-                            <td>{{ flower.season }}</td>
-                            <td>{{ flower.sort }}</td>
-                            <td>{{ flower.price }}</td>
-                        </tr>
-                    {% endif %}
+                    <tr>
+                        <td>{{ flower.name }}</td>
+                        <td>{{ flower.type }}</td>
+                        <td>{{ flower.country }}</td>
+                        <td>{{ flower.season }}</td>
+                        <td>{{ flower.sort }}</td>
+                        <td>{{ flower.price }}</td>
+                    </tr>
                 {% endfor %}
                 </tbody>
             </table>
@@ -111,6 +139,7 @@
                 </tbody>
             </table>
         </div>
+
         <div class="col-md-12">
             <h2>Поставщики</h2>
             <table class="table custom-table" id="suppliersTable">
@@ -142,19 +171,8 @@
                 </tbody>
             </table>
         </div>
-
-
     </div>
 </div>
 
-<footer id="footer">
-    <div class="container">
-        <p>© 2024 Магазин цветов. Все права защищены.</p>
-    </div>
-</footer>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
