@@ -34,79 +34,81 @@
                 <form id="filterForm" method="GET" action="/">
                     <label for="seasonSelect">Выберите сезон цветения:</label>
                     <select class="form-control" id="seasonSelect" name="season" onchange="this.form.submit()">
-                        <option value="" {% if current_season == None %} selected {% endif %}>Все</option>
-                        <option value="Весна" {% if current_season == 'Весна' %} selected {% endif %}>Весна</option>
-                        <option value="Лето" {% if current_season == 'Лето' %} selected {% endif %}>Лето</option>
-                        <option value="Осень" {% if current_season == 'Осень' %} selected {% endif %}>Осень</option>
-                        <option value="Зима" {% if current_season == 'Зима' %} selected {% endif %}>Зима</option>
+                        <option value="" disabled selected>Выберите сезон</option>
+                        <option value="Весна" {% if current_season == "Весна" %}selected{% endif %}>Весна</option>
+                        <option value="Лето" {% if current_season == "Лето" %}selected{% endif %}>Лето</option>
+                        <option value="Осень" {% if current_season == "Осень" %}selected{% endif %}>Осень</option>
+                        <option value="Зима" {% if current_season == "Зима" %}selected{% endif %}>Зима</option>
                     </select>
                 </form>
             </div>
 
             <div class="form-group">
-                <form id="filterForm" method="GET" action="/filter_by_country">
-                    <label for="countryInput">Введите страну:</label>
-                    <input type="text" class="form-control" id="countryInput" name="country">
-                    <button type="submit" class="btn btn-primary mt-2">Фильтр по стране</button>
+                <form id="countryForm" method="GET" action="/filter_by_country">
+                    <label for="countrySelect">Выберите страну:</label>
+                    <select class="form-control" id="countrySelect" name="country" onchange="this.form.submit()">
+                        <option value="" disabled selected>Выберите страну</option>
+                        {% for flower in flowers %}
+                        <option value="{{ flower['country'] }}">{{ flower['country'] }}</option>
+                        {% endfor %}
+                    </select>
                 </form>
             </div>
 
             <div class="form-group">
-                <form id="filterForm" method="GET" action="/filter_by_supplier">
-                    <label for="supplierInput">Введите имя поставщика:</label>
-                    <input type="text" class="form-control" id="supplierInput" name="name">
-                    <button type="submit" class="btn btn-primary mt-2">Фильтр поставщиков</button>
+                <form id="supplierForm" method="GET" action="/filter_by_supplier">
+                    <label for="supplierSelect">Выберите поставщика:</label>
+                    <select class="form-control" id="supplierSelect" name="name" onchange="this.form.submit()">
+                        <option value="" disabled selected>Выберите поставщика</option>
+                        {% for supplier in suppliers %}
+                        <option value="{{ supplier['name'] }}">{{ supplier['name'] }}</option>
+                        {% endfor %}
+                    </select>
                 </form>
             </div>
 
             <div class="form-group">
-                <form id="filterForm" method="GET" action="/flowers_by_supplier">
-                    <label for="supplierFlowersInput">Введите имя поставщика для цветов:</label>
-                    <input type="text" class="form-control" id="supplierFlowersInput" name="supplier">
-                    <button type="submit" class="btn btn-primary mt-2">Цветы от поставщика</button>
+                <form id="expensiveFlowerForm" method="GET" action="/expensive_flower_sellers">
+                    <button type="submit" class="btn btn-primary">Показать продавцов самых дорогих цветов</button>
                 </form>
             </div>
 
             <div class="form-group">
-                <form id="filterForm" method="GET" action="/suppliers_by_flower_sort">
-                    <label for="flowerSortInput">Введите сорт цветка:</label>
-                    <input type="text" class="form-control" id="flowerSortInput" name="sort">
-                    <button type="submit" class="btn btn-primary mt-2">Поставщики по сорту</button>
+                <form id="commonSuppliersForm" method="GET" action="/common_suppliers">
+                    <label for="seller1Select">Выберите первого продавца:</label>
+                    <select class="form-control" id="seller1Select" name="seller1">
+                        <option value="" disabled selected>Выберите первого продавца</option>
+                        {% for seller in sellers %}
+                        <option value="{{ seller['name'] }}">{{ seller['name'] }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="seller2Select">Выберите второго продавца:</label>
+                    <select class="form-control" id="seller2Select" name="seller2">
+                        <option value="" disabled selected>Выберите второго продавца</option>
+                        {% for seller in sellers %}
+                        <option value="{{ seller['name'] }}">{{ seller['name'] }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-primary mt-2">Показать общих поставщиков</button>
                 </form>
             </div>
 
-            <div class="form-group">
-                <form id="filterForm" method="GET" action="/expensive_flower_sellers">
-                    <button type="submit" class="btn btn-primary mt-2">Продавцы самых дорогих цветов</button>
-                </form>
-            </div>
-
-            <div class="form-group">
-                <form id="filterForm" method="GET" action="/common_suppliers">
-                    <label for="commonSupplierSeller1Input">Продавец 1:</label>
-                    <input type="text" class="form-control" id="commonSupplierSeller1Input" name="seller1">
-                    <label for="commonSupplierSeller2Input">Продавец 2:</label>
-                    <input type="text" class="form-control" id="commonSupplierSeller2Input" name="seller2">
-                    <button type="submit" class="btn btn-primary mt-2">Общие поставщики</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="col-md-12">
-            <h2>Цветы</h2>
-            <table class="table custom-table" id="flowersTable">
+            <h2>Список цветов</h2>
+            <table class="table table-bordered">
                 <thead>
-                <tr>
-                    <th>Название</th>
-                    <th>Вид</th>
-                    <th>Страна</th>
-                    <th>Сезон цветения</th>
-                    <th>Сорт</th>
-                    <th>Цена</th>
-                </tr>
+                    <tr>
+                        <th>Название</th>
+                        <th>Тип</th>
+                        <th>Страна</th>
+                        <th>Сезон</th>
+                        <th>Сорт</th>
+                        <th>Цена</th>
+                        <th>Поставщик</th>
+                        <th>Продавец</th>
+                    </tr>
                 </thead>
-                <tbody id="flowersList">
-                {% for flower in flowers %}
+                <tbody>
+                    {% for flower in flowers %}
                     <tr>
                         <td>{{ flower.name }}</td>
                         <td>{{ flower.type }}</td>
@@ -114,65 +116,78 @@
                         <td>{{ flower.season }}</td>
                         <td>{{ flower.sort }}</td>
                         <td>{{ flower.price }}</td>
+                        <td>{{ flower.supplier }}</td>
+                        <td>{{ flower.seller }}</td>
                     </tr>
-                {% endfor %}
+                    {% endfor %}
                 </tbody>
             </table>
-        </div>
 
-        <div class="col-md-12">
-            <h2>Продавцы</h2>
-            <table class="table custom-table" id="sellersTable">
+            <h2>Список поставщиков</h2>
+            <table class="table table-bordered">
                 <thead>
-                <tr>
-                    <th>ФИО</th>
-                    <th>Адрес</th>
-                </tr>
+                    <tr>
+                        <th>Название</th>
+                        <th>Тип</th>
+                        <th>Адрес</th>
+                    </tr>
                 </thead>
-                <tbody id="sellersList">
-                {% for seller in sellers %}
+                <tbody>
+                    {% for supplier in suppliers %}
+                    <tr>
+                        <td>{{ supplier.name }}</td>
+                        <td>{{ supplier.type }}</td>
+                        <td>{{ supplier.address }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>Список продавцов</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Адрес</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for seller in sellers %}
                     <tr>
                         <td>{{ seller.name }}</td>
                         <td>{{ seller.address }}</td>
                     </tr>
-                {% endfor %}
+                    {% endfor %}
                 </tbody>
             </table>
-        </div>
 
-        <div class="col-md-12">
-            <h2>Поставщики</h2>
-            <table class="table custom-table" id="suppliersTable">
+            {% if filtered_suppliers %}
+            <h2>Поставщики по запросу</h2>
+            <table class="table table-bordered">
                 <thead>
-                <tr>
-                    <th>ФИО</th>
-                    <th>Вид хозяйства</th>
-                    <th>Адрес</th>
-                </tr>
+                    <tr>
+                        <th>Название</th>
+                        <th>Тип</th>
+                        <th>Адрес</th>
+                    </tr>
                 </thead>
-                <tbody id="suppliersList">
-                {% if filtered_suppliers %}
+                <tbody>
                     {% for supplier in filtered_suppliers %}
-                        <tr>
-                            <td>{{ supplier.name }}</td>
-                            <td>{{ supplier.type }}</td>
-                            <td>{{ supplier.address }}</td>
-                        </tr>
+                    <tr>
+                        <td>{{ supplier.name }}</td>
+                        <td>{{ supplier.type }}</td>
+                        <td>{{ supplier.address }}</td>
+                    </tr>
                     {% endfor %}
-                {% else %}
-                    {% for supplier in suppliers %}
-                        <tr>
-                            <td>{{ supplier.name }}</td>
-                            <td>{{ supplier.type }}</td>
-                            <td>{{ supplier.address }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
                 </tbody>
             </table>
+            {% endif %}
         </div>
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
